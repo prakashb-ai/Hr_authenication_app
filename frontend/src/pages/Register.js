@@ -15,7 +15,6 @@ function Register() {
     const [loading, setLoading] = useState(false);
 
     const handleRegister = async () => {
-        // Validate inputs
         if (!username.trim() || !email.trim() || !phonenumber.trim() || !password.trim() || !confirmpassword.trim()) {
             setError('Please fill in all fields.');
             return;

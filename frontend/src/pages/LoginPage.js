@@ -139,6 +139,7 @@ function LoginPage() {
 
 
                             </button>
+                            
 
                             <button className='border border-success bg-white mx-4'
                                 onClick={RegisterLogin}
@@ -147,6 +148,7 @@ function LoginPage() {
                             </button>
 
                         </div>
+                        
 
 
                     </div>
