@@ -17,6 +17,7 @@ function LoginPage() {
 
 
     const handleLogin = async () => {
+
         if (!email.trim() && !password.trim()) {
             setError('Please fill in both fields.');
             return;
@@ -29,6 +30,7 @@ function LoginPage() {
             setError('Please fill in password fields.');
             return
         }
+        
 
 
         setLoading(true);
@@ -46,6 +48,7 @@ function LoginPage() {
             }
             const data = await response.json()
             console.log('Login successful', data)
+            
 
             navigate('/home');
 
