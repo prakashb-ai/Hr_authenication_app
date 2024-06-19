@@ -76,6 +76,45 @@ router.get('/myprofile/:id',middleware, async (req, res) => {
 })
 
 
+router.get('/profile',async(req,res)=>{
+    const getData = await Usermodel.find()
+    if(getData){
+        return res.status(200).json({message:"data found",data:getData})
+    }
+    else{
+    return res.status(404).json({message:"data not found"})
+    }
+})
+
+
+router.delete('/delete',async(req,res)=>{
+    try{
+        const deleteData = await Usermodel.deleteMany()
+        if(deleteData){
+            return res.status(200).json({message:"data deleted",data:deleteData})
+        }
+        else{
+            return res.status(400).json({message:"data was not deleted"})
+        }
+    }catch(error){
+            console.log(error)
+    }
+})
+
+router.delete('/delete/:id',async(req,res)=>{
+    try{
+        const deleteData = await Usermodel.findById(req.params.id)
+        if(deleteData){
+            return res.status(200).json({message:"data deleted",data:deleteData})
+        }
+        else{
+            return res.status(400).json({message:"data was not deleted"})
+        }
+    }catch(error){
+            console.log(error)
+    }
+})
+
 
 
 module.exports = router;
