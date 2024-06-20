@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import Login from '../images/Login.jpg'
@@ -60,10 +60,7 @@ function LoginPage() {
             setLoading(false);
         }
     };
-    useEffect(() => {
-        handleLogin();
-    })
-
+  
 
 
     const RegisterLogin = () => {
