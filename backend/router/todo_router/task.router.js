@@ -59,7 +59,7 @@ router.get('/api/get/task/:id', async (req, res) => {
 
 router.put('/api/update/task/:id', async (req, res) => {
     try {
-        const updateData = await TaskSchema.findByIdAndUpdate(req.params.id)
+        const updateData = await TaskSchema.findByIdAndUpdate(req.params.id,req.body, { new: true })
         if (updateData) {
             return res.status(200).json({ message: "data updated", data: updateData })
         }
