@@ -15,10 +15,8 @@ function LoginPage() {
     const [loading, setLoading] = useState(false);
 
 
-
     const handleLogin = async () => {
-
-        if (!email.trim() || !password.trim()) {
+        if (!email.trim() && !password.trim()) {
             setError('Please fill in both fields.');
             return;
         }
@@ -32,46 +30,47 @@ function LoginPage() {
             setError('Please fill in the password field.');
             return;
         }
-    
+
         const validateEmail = (email) => /^[^\s@]+@(hr\.com|emp\.com)$/.test(email);
-    
+
         if (!validateEmail(email)) {
             setError('Email must end with @hr.com or @emp.com');
             return;
         }
-    
-        setError(''); // Clear any previous error
-    
-        if (email.endsWith('@emp.com')) {
-            navigate('/employe');
-        } else if (email.endsWith('@hr.com')) {
-            navigate('/hr');
-        }
 
-
-        setLoading(true);
         setError('');
+        setLoading(true);
+
         try {
             const response = await fetch('http://localhost:8000/login', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': "application/json"
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ email, password })
             });
+
             if (!response.ok) {
-                throw new Error('Login Failed')
+                throw new Error('Login failed');
             }
-            const data = await response.json()
-            console.log('Login successful', data)
 
+            const data = await response.json();
 
+            if (data && data.success) {
+                console.log('Login successful', data);
+
+                if (email.endsWith('@emp.com')) {
+                    navigate('/employee');
+                } else if (email.endsWith('@hr.com')) {
+                    navigate('/hr');
+                }
+            } else {
+                throw new Error('Email or password is incorrect');
+            }
 
         } catch (error) {
             setError('Error logging in: ' + error.message);
-
-        }
-        finally {
+        } finally {
             setLoading(false);
         }
     };

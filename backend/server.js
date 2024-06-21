@@ -9,6 +9,7 @@ const Userrouter = require('./router/user.router')
 const Hrrouter = require('./router/hr_router/hr.router')
 const Emprouter = require('./router/emp_router/emp.router')
 const Taskrouter = require('./router/todo_router/task.router')
+const Logoutrouter = require('./router/LogOut.router')
 
 dotenv.config()
 
@@ -30,6 +31,7 @@ app.use(Userrouter)
 app.use(Hrrouter)
 app.use(Emprouter)
 app.use(Taskrouter)
+app.use(Logoutrouter)
 
 app.listen(process.env.PORT, () => {
     console.log(`server is running on http://localhost:${process.env.PORT}`)
