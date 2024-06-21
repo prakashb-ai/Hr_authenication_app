@@ -30,6 +30,15 @@ function LoginPage() {
             setError('Please fill in password fields.');
             return
         }
+        const validateEmail = (email) => {
+            const regex = /^[^\s@]+@(hr\.com|emp\.com)$/;
+            return regex.test(email);
+          };
+          if (validateEmail(email)) {
+            setError('');
+          } else {
+            setError('Email must end with @hr.com or @emp.com');
+          }
         
 
 
@@ -89,7 +98,7 @@ function LoginPage() {
                             <div className='row d-flex justify-content-center'>
 
                                 <input name='email'
-                                    type='text'
+                                    type='email'
                                     placeholder='enter a email'
                                     className='p-4 m-3 border border-success'
                                     value={email}
@@ -126,6 +135,7 @@ function LoginPage() {
                             <button className='border border-success bg-white'
                                 onClick={handleLogin}
                                 disabled={loading}
+                                
 
                                 style={{
                                     width: '35%',

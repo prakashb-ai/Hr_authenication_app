@@ -25,6 +25,17 @@ function Register() {
             return;
         }
 
+        const validateEmail = (email) => {
+            const regex = /^[^\s@]+@(hr\.com|emp\.com)$/;
+            return regex.test(email);
+          };
+          if (validateEmail(email)) {
+            setError('');
+            
+          } else {
+            setError('Email must end with @hr.com or @emp.com');
+          }
+
         setLoading(true);
         setError('');
 
@@ -88,7 +99,7 @@ function Register() {
 
                                 <input
                                     name='email'
-                                    type='text'
+                                    type='email'
                                     placeholder='Enter your email'
                                     className='p-4 m-2 border border-success'
                                     value={email}
