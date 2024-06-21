@@ -18,33 +18,35 @@ function LoginPage() {
 
     const handleLogin = async () => {
 
-        if (!email.trim() && !password.trim()) {
+        if (!email.trim() || !password.trim()) {
             setError('Please fill in both fields.');
             return;
         }
-        else if (!email.trim()) {
-            setError('Please fill in email fields.');
+    
+        if (!email.trim()) {
+            setError('Please fill in the email field.');
             return;
         }
-        else if (!password.trim()) {
-            setError('Please fill in password fields.');
-            return
+    
+        if (!password.trim()) {
+            setError('Please fill in the password field.');
+            return;
         }
-        const validateEmail = (email) => {
-            const regex = /^[^\s@]+@(hr\.com|emp\.com)$/;
-            return regex.test(email);
-        };
-        if (validateEmail(email)) {
-            setError('');
-            if (email.endsWith('@emp.com')) {
-                navigate('/employe')
-            } else if (email.endsWith('@hr.com')) {
-                navigate('/hr')
-            }
-        } else {
+    
+        const validateEmail = (email) => /^[^\s@]+@(hr\.com|emp\.com)$/.test(email);
+    
+        if (!validateEmail(email)) {
             setError('Email must end with @hr.com or @emp.com');
+            return;
         }
-
+    
+        setError(''); // Clear any previous error
+    
+        if (email.endsWith('@emp.com')) {
+            navigate('/employe');
+        } else if (email.endsWith('@hr.com')) {
+            navigate('/hr');
+        }
 
 
         setLoading(true);
@@ -168,7 +170,7 @@ function LoginPage() {
             </div>
             <div className='col-sm-12 col-md-12 col-xl-12 col-lg-12 d-flex justify-content-end'>
                 {error && (
-                    <div className='alert alert-danger m-1 d-flex justify-content-center  ' style={{ width: '250px', height: '50px', borderRadius: '6px' }}>
+                    <div className='alert alert-danger  d-flex justify-content-center  ' style={{ width: '500px', height: '50px', borderRadius: '20px' }}>
                         {error}
                     </div>
                 )}
