@@ -28,13 +28,17 @@ function Register() {
         const validateEmail = (email) => {
             const regex = /^[^\s@]+@(hr\.com|emp\.com)$/;
             return regex.test(email);
-          };
-          if (validateEmail(email)) {
+        };
+        if (validateEmail(email)) {
             setError('');
-            
-          } else {
+            if (email.endsWith('@emp.com')) {
+                navigate('/employe')
+            } else if (email.endsWith('@hr.com')) {
+                navigate('/hr')
+            }
+        } else {
             setError('Email must end with @hr.com or @emp.com');
-          }
+        }
 
         setLoading(true);
         setError('');
@@ -45,7 +49,7 @@ function Register() {
                 headers: {
                     'Content-Type': "application/json"
                 },
-                body: JSON.stringify({ username, email, phonenumber, password,confirmpassword }),
+                body: JSON.stringify({ username, email, phonenumber, password, confirmpassword }),
             });
 
             if (!response.ok) {
@@ -54,7 +58,6 @@ function Register() {
 
             const data = await response.json();
             console.log('Registration successful', data);
-            navigate('/home');
         } catch (error) {
             setError('Error registering: ' + error.message);
         } finally {

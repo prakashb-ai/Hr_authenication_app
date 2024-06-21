@@ -22,24 +22,29 @@ function LoginPage() {
             setError('Please fill in both fields.');
             return;
         }
-        else if(!email.trim()){
+        else if (!email.trim()) {
             setError('Please fill in email fields.');
             return;
         }
-        else if( !password.trim()){
+        else if (!password.trim()) {
             setError('Please fill in password fields.');
             return
         }
         const validateEmail = (email) => {
             const regex = /^[^\s@]+@(hr\.com|emp\.com)$/;
             return regex.test(email);
-          };
-          if (validateEmail(email)) {
+        };
+        if (validateEmail(email)) {
             setError('');
-          } else {
+            if (email.endsWith('@emp.com')) {
+                navigate('/employe')
+            } else if (email.endsWith('@hr.com')) {
+                navigate('/hr')
+            }
+        } else {
             setError('Email must end with @hr.com or @emp.com');
-          }
-        
+        }
+
 
 
         setLoading(true);
@@ -57,9 +62,8 @@ function LoginPage() {
             }
             const data = await response.json()
             console.log('Login successful', data)
-            
 
-            navigate('/home');
+
 
         } catch (error) {
             setError('Error logging in: ' + error.message);
@@ -69,7 +73,7 @@ function LoginPage() {
             setLoading(false);
         }
     };
-  
+
 
 
     const RegisterLogin = () => {
@@ -80,7 +84,7 @@ function LoginPage() {
     return (
 
         <div className='container-fluid'>
-            
+
             <div className='container mt-5'>
                 <div className='row'>
                     <div className='col-sm-6 col-md-6 col-lg-6 col-xl-6'>
@@ -135,7 +139,7 @@ function LoginPage() {
                             <button className='border border-success bg-white'
                                 onClick={handleLogin}
                                 disabled={loading}
-                                
+
 
                                 style={{
                                     width: '35%',
@@ -146,7 +150,7 @@ function LoginPage() {
 
 
                             </button>
-                            
+
 
                             <button className='border border-success bg-white mx-4'
                                 onClick={RegisterLogin}
@@ -155,7 +159,7 @@ function LoginPage() {
                             </button>
 
                         </div>
-                        
+
 
 
                     </div>
@@ -163,11 +167,11 @@ function LoginPage() {
 
             </div>
             <div className='col-sm-12 col-md-12 col-xl-12 col-lg-12 d-flex justify-content-end'>
-            {error && (
-                <div className='alert alert-danger m-1 d-flex justify-content-center  ' style={{width:'250px',height:'50px', borderRadius:'6px'}}>
-                    {error}
-                </div>
-            )}
+                {error && (
+                    <div className='alert alert-danger m-1 d-flex justify-content-center  ' style={{ width: '250px', height: '50px', borderRadius: '6px' }}>
+                        {error}
+                    </div>
+                )}
             </div>
         </div>
     )
