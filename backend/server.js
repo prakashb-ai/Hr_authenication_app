@@ -6,6 +6,7 @@ const cors = require('cors')
 const dotenv = require('dotenv')
 
 const Userrouter = require('./router/user.router')
+const Hrrouter = require('./router/hr_router/hr.router')
 
 dotenv.config()
 
@@ -24,6 +25,7 @@ app.use(bodyparser.json())
 app.use(cors({origin:"*"}))
 
 app.use(Userrouter)
+app.use(Hrrouter)
 
 
 app.listen(process.env.PORT, () => {
