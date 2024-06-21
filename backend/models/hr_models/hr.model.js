@@ -17,6 +17,11 @@ const HrSchema = new mongoose.Schema({
         type:Number,
         required: true
     },
+    hr_user:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'UserSchema'
+
+    }
     
 },{
     timestamps:true

@@ -40,6 +40,7 @@ router.post('/login', async (req, res) => {
         if (exit.password !== password) {
             return res.status(400).json({ message: "Invalid credentials" });
         }
+        
         let payload = {
             user: {
                 id: exit.id

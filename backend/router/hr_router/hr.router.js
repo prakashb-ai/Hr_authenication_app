@@ -8,18 +8,22 @@ router.post('/api/hr/post', async (req, res) => {
         hr_id: req.body.hr_id,
         hr_name: req.body.hr_name,
         hr_department: req.body.hr_department,
-        hr_phonenumber: req.body.hr_phonenumber
+        hr_phonenumber: req.body.hr_phonenumber,
+        hr_user: req.body.hr_user
 
     })
     const saveData = await Hrdata.save()
     if (saveData) {
         return res.status(201).json({ message: "data created", data: saveData })
     }
+    else{
+        return res.status(400).json({message:"data not created"})
+    }
 })
 
 router.get('/api/hr/get', async (req, res) => {
     try {
-        const getData = await HrSchema.find()
+        const getData = await HrSchema.find().populate('hr_user')
         if (getData) {
             return res.status(200).json({ message: "data found", data: getData })
         }
@@ -34,7 +38,7 @@ router.get('/api/hr/get', async (req, res) => {
 
 router.get('/api/hr/get/:id', async (req, res) => {
     try {
-        const getData = await HrSchema.findById(req.params.id)
+        const getData = await HrSchema.findById(req.params.id).populate('hr_user')
         if (getData) {
             return res.status(200).json({ message: "data was found", data: getData })
         }
@@ -91,7 +95,8 @@ router.delete('/api/delete/hr', async (req, res) => {
             return res.status(400).json({ message: "data was not deleted" })
         }
     } catch (err) {
-
+        console.log(error)
+        return res.status(500).json({message:"Internal server Error"})
     }
 })
 
