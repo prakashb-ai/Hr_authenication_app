@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
-import Login from '../images/Login.jpg'
+import Login from '../images/Login.png'
+import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 
 function LoginPage() {
@@ -13,6 +16,7 @@ function LoginPage() {
     const [password, setPassword] = useState('')
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+
 
 
     const handleLogin = async () => {
@@ -82,101 +86,105 @@ function LoginPage() {
         navigate('/register')
     }
 
-
     return (
-
-        <div className='container-fluid'>
-
-            <div className='container mt-5'>
-                <div className='row'>
-                    <div className='col-sm-6 col-md-6 col-lg-6 col-xl-6'>
-                        <div className='Loginimages'>
-                            <img src={Login} alt='login' style={{ width: '500px', height: '550px' }}></img>
-                        </div>
+        <div className='container'>
+            <div className='row border border-2 mt-5 shadow-lg d-flex justify-content-center'>
+                <div className='col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 '>
+                    <div className='mt-5 d-flex justify-content-center'>
+                        <img src={Login} alt='LoginImage'
+                            className='rounded '
+                            width="90%" height="90%" />
                     </div>
-                    <div className='col-sm-6 col-md-6 col-lg-6 col-xl-6'>
-                        <div className='container mt-5 p-4'>
-                            <h1 className='d-flex justify-content-center'>Login Page</h1>
-                        </div>
+                </div>
+
+                <div className='col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 '>
+                    <div className='mt-5 '>
+                        <h1 className='text-center'>Login</h1>
+                    </div>
+                    <div className='pt-4'>
+                        <form className='mx-auto justify-content-center ' style={{ width: "70%", height: "40%" }}>
 
 
-                        <div className='m-2'>
-                            <div className='row d-flex justify-content-center'>
-
-                                <input name='email'
+                            <div className='mb-3 mt-5  shadow-sm input-group  '>
+                                <span className='input-group-text rounded-3 bg-white border border-1'>
+                                    <FontAwesomeIcon icon={faUser} />
+                                </span>
+                                <input
                                     type='email'
-                                    placeholder='enter a email'
-                                    className='p-4 m-3 border border-success'
+                                    className='form-control rounded-3 border border-1  '
                                     value={email}
                                     onChange={(e) => {
                                         setEmail(e.target.value);
                                         setError('');
                                     }}
-                                    style={{
-                                        height: '45px',
-                                        width: '60%',
-                                        borderRadius: '50px'
-                                    }} />
+                                    id='email'
+                                    placeholder='enter a email'
+                                    name='email'
+                                />
 
-                                <input name='password'
-                                    type='password'
-                                    placeholder='enter a password'
-                                    className='p-4 m-2 border border-success'
-                                    value={password}
 
-                                    onChange={(e) => {
-                                        setPassword(e.target.value);
-                                        setError('');
-                                    }}
-                                    style={{
-                                        height: '45px',
-                                        width: '60%',
-                                        borderRadius: '50px'
-                                    }} />
                             </div>
-                        </div>
+                            <div className='mb-3 input-group shadow-sm rounded-3   ' >
+                                <span className='input-group-text rounded-3 bg-white border border-1 ' >
+                                    <FontAwesomeIcon icon={faLock} className='' />
+                                </span>
+                                <input type='password'
+                                    className='form-control border border-1  '
+                                    id='pwd'
+                                    placeholder='enter a password'
+                                    name="pswd"
+                                    value={password}
+                                    onChange={(e) => {
+                                        setPassword(e.target.value)
+                                        setError('')
+                                    }}
+
+                                    style={{
+                                        borderRadius: "10px",
 
 
-                        <div className='m-3 d-flex justify-content-center'>
-                            <button className='border border-success bg-white'
+                                    }}
+
+
+                                />
+
+                            </div>
+                            <div className='m-3 '>
+                                <p className='d-flex justify-content-end' onClick={RegisterLogin} style={{ fontSize: '88%', cursor: 'pointer' }}>Not registred?  <span className='text-primary'>SignUp</span></p>
+                            </div>
+
+                        </form>
+                        <div className='  d-flex justify-content-center'>
+                            <button type="submit"
+                                className="btn btn-primary"
                                 onClick={handleLogin}
                                 disabled={loading}
 
 
                                 style={{
-                                    width: '35%',
-                                    height: '10%',
-                                    borderRadius: '10px'
-                                }}>
+                                    width: "80%", height: "7%", borderRadius: "10px",
+
+                                }} >
                                 {loading ? 'Login' : 'Login'}
 
-
-                            </button>
-
-
-                            <button className='border border-success bg-white mx-4'
-                                onClick={RegisterLogin}
-                                style={{ width: '35%', height: '10%', borderRadius: '10px' }}>
-                                Register
                             </button>
 
                         </div>
-
-
-
                     </div>
+                    <div className='col-sm-12 col-md-12 col-xl-12 col-lg-12 m-3 d-flex justify-content-end'>
+                        {error && (
+                            <div className='alert alert-danger m-3 d-flex justify-content-center shadow ' style={{ width: '50%', height: '10%', borderRadius: '50px' }}>
+                                {error}
+                            </div>
+                        )}
+                    </div>
+
                 </div>
 
+
             </div>
-            <div className='col-sm-12 col-md-12 col-xl-12 col-lg-12 d-flex justify-content-end'>
-                {error && (
-                    <div className='alert alert-danger  d-flex justify-content-center  ' style={{ width: '500px', height: '50px', borderRadius: '20px' }}>
-                        {error}
-                    </div>
-                )}
-            </div>
+
         </div>
     )
 }
-
 export default LoginPage
