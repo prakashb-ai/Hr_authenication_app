@@ -30,7 +30,7 @@ router.post('/api/register', async (req, res) => {
     }
 })
 
-router.post('/api/login', async (req, res) => {
+router.post('/api/login',async (req, res) => {
     try {
         const { email, password } = req.body;
         const exit = await Usermodel.findOne({ email });

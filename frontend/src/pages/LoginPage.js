@@ -20,12 +20,12 @@ function LoginPage() {
             setError('Please fill in both fields.');
             return;
         }
-    
+
         if (!email.trim()) {
             setError('Please fill in the email field.');
             return;
         }
-    
+
         if (!password.trim()) {
             setError('Please fill in the password field.');
             return;
@@ -42,7 +42,7 @@ function LoginPage() {
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:8000/login', {
+            const response = await fetch('http://localhost:8000/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -50,24 +50,25 @@ function LoginPage() {
                 body: JSON.stringify({ email, password })
             });
 
+
             if (!response.ok) {
                 throw new Error('Login failed');
             }
 
             const data = await response.json();
+            console.log('Response data:', data);
 
-            if (data && data.success) {
+            if (data) {
                 console.log('Login successful', data);
 
                 if (email.endsWith('@emp.com')) {
-                    navigate('/employee');
+                    navigate('/employe');
                 } else if (email.endsWith('@hr.com')) {
                     navigate('/hr');
                 }
             } else {
                 throw new Error('Email or password is incorrect');
             }
-
         } catch (error) {
             setError('Error logging in: ' + error.message);
         } finally {
