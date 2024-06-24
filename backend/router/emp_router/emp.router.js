@@ -8,7 +8,7 @@ router.post('/api/emp/post', async (req, res) => {
         emp_id: req.body.emp_id,
         emp_phonenumber: req.body.emp_phonenumber,
         emp_department: req.body.emp_department,
-        emphr_id: req.body.emp_hr_id
+        emp_hr_id: req.body.emp_hr_id
     })
     const saveData = await EmpData.save()
     if (saveData) {

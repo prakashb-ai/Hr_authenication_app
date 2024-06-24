@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 const Usermodel = require('../models/user.model')
 const middleware = require('../middleware')
 
-router.post('/register', async (req, res) => {
+router.post('/api/register', async (req, res) => {
     try {
         const { username, email, phonenumber, password, confirmpassword } = req.body;
         const exit = await Usermodel.findOne({ email });
@@ -30,7 +30,7 @@ router.post('/register', async (req, res) => {
     }
 })
 
-router.post('/login', async (req, res) => {
+router.post('/api/login', async (req, res) => {
     try {
         const { email, password } = req.body;
         const exit = await Usermodel.findOne({ email });
@@ -77,7 +77,7 @@ router.get('/myprofile/:id',middleware, async (req, res) => {
 })
 
 
-router.get('/profile',async(req,res)=>{
+router.get('/api/profile',async(req,res)=>{
     const getData = await Usermodel.find()
     if(getData){
         return res.status(200).json({message:"data found",data:getData})
