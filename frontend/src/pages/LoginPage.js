@@ -88,7 +88,7 @@ function LoginPage() {
 
     return (
         <div className='container'>
-            <div className='row border border-2 mt-5 shadow-lg d-flex justify-content-center'>
+            <div className='row border border-2 mt-5 shadow-lg d-flex justify-content-center rounded-5'>
                 <div className='col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 '>
                     <div className='mt-5 d-flex justify-content-center'>
                         <img src={Login} alt='LoginImage'
