@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
 import { useNavigate } from 'react-router-dom';
 import FsfLogo from '../images/FsfLogo.jpg'
 import Login from '../images/Login.png'
@@ -7,11 +8,16 @@ import { faPenToSquare, faMagnifyingGlass } from '@fortawesome/free-solid-svg-ic
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
-
 function HrPage() {
   const navigate = useNavigate();
 
   const [HrData, setHrData] = useState([])
+  const [DeleteData, setDeleteData] = useState([])
+  const [hr_id ,setHrId] = useState('')
+  const [hr_name, setHrName] = useState('')
+  const [hr_department, setHrDepartment] = useState('')
+  const [hr_phonenumber,setHrPhoneNumber] = useState('')
+
 
 
 
@@ -31,7 +37,56 @@ function HrPage() {
 
   useEffect(() => {
     HrGetData();
+    
   }, [])
+
+
+
+  const PostHrData = async()=>{
+    try{
+        const postResponse = await fetch('http://localhost:8000/api/hr/post',{
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json'
+          },
+          body:JSON.stringify({
+            hr_id,
+            hr_name,
+            hr_department,
+            hr_phonenumber
+          })
+        });
+        if(!postResponse.ok){
+          throw new Error('form data not created')
+        }
+
+        const data = await postResponse.json()
+        console.log(data)
+
+    }catch(err){
+      console.log(err.message)
+    }
+  }
+
+
+  const DeleteHrData = async()=>{
+    try{
+
+      const deleteResponse = await fetch('http://localhost://8000/api/delete/hr',{
+        method:'DELETE'
+      })
+      if(!deleteResponse.ok){
+        throw new Error('delete Data')
+      }
+      const data = await deleteResponse.json()
+      console.log(data)
+
+
+    }catch(err){
+      console.log(err.message)
+    }
+  }
+
 
 
 
@@ -40,7 +95,6 @@ function HrPage() {
   }
   return (
     <div className='container-fluid'>
-      {console.log('Rendering component with HrData:', HrData)}
       <div className='row m-1'>
         <div className='col-sm-6 col-md-6 col-lg-6 col-xl-6 '>
           <div className='mt-1 d-flex justify-content-start'>
@@ -69,7 +123,7 @@ function HrPage() {
         </div>
         <div className='col-sm-6 col-md-6 col-lg-6 col-xl-6'>
           <div className='mt-2 mx-3  d-flex justify-content-end'>
-            <FontAwesomeIcon icon={faPenToSquare} className='m-3 ' size="1.5x" />
+            <FontAwesomeIcon icon={faPenToSquare} className='m-3 ' type='button' data-bs-toggle="modal" data-bs-target="#myModal" size="1x" />
           </div>
 
           {HrData.map((item, index) => (
@@ -100,6 +154,7 @@ function HrPage() {
         </div>
 
       </div>
+
 
 
 
@@ -253,6 +308,105 @@ function HrPage() {
 
       </div>
 
+
+      <div className='row'>
+        <div className='col-sm-12 col-md-12 col-lg-12 col-xl-12' >
+          <div className='mt-3'>
+            <div className='modal fade mt-5 py-5 ' id='myModal' tabIndex="-1" aria-labelledby="modalLabel" aria-hidden="true"  >
+              <div className='modal-dialog' >
+                <div className='modal-content'>
+                  <div className='modal-header'>
+                    <h4 className='modal-title' id="modalLabel">Form</h4>
+                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+
+
+
+                  <form className='mt-1 mx-3'>
+                    <div className="row mt-3">
+
+                      <div className='col-sm-6 col-md-6 col-lg-6 col-xl-6'>
+                        <div className='nt-3 mb-3'>
+                          <input type='number'
+                            className='form-control border border-1 shadow '
+                            id='number'
+                            placeholder='enter a ID Number'
+                            name="number" 
+                            value={hr_id}
+                            onChange={(e)=>{
+                              setHrId(e.target.value)
+                            }}
+
+                            />
+                        </div>
+                      </div>
+
+                      <div className='col-sm-6 col-md-6 col-lg-6 col-xl-6'>
+                        <input type='text'
+                          className='form-control border border-1 shadow '
+                          id='name'
+                          placeholder='enter a name'
+                          name="name"
+                          value={hr_name}
+                          onChange={(e)=>{
+                            setHrName(e.target.value)
+                          }}
+                          
+                          />
+                      </div>
+
+                    </div>
+                    <div className="row mt-3">
+
+                      <div className='col-sm-6 col-md-6 col-lg-6 col-xl-6'>
+                        <div className='nt-3 mb-3'>
+                          <input type='text'
+                            className='form-control border border-1 shadow '
+                            id='department'
+                            placeholder='enter a department'
+                            name="department" 
+                            value={hr_department}
+                            onChange={(e)=>{
+                              setHrDepartment(e.target.value)
+                            }}
+                            />
+                        </div>
+                      </div>
+
+                      <div className='col-sm-6 col-md-6 col-lg-6 col-xl-6'>
+                        <input type='Number'
+                          className='form-control border border-1 shadow '
+                          id='phonenumber'
+                          placeholder='enter a phonenumber'
+                          name="phonenumber"
+                          value={hr_phonenumber}
+                          onChange={(e)=>{
+                            setHrPhoneNumber(e.target.value)
+                          }}
+                          />
+                      </div>
+
+                    </div>
+
+                  </form>
+
+
+
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-success" onClick={PostHrData} data-bs-dismiss="modal">Save</button>
+                    <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Delete</button>
+
+
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
 
 
 
