@@ -117,7 +117,7 @@ function Register() {
                                 <input type='email'
                                     className='form-control border border-1  '
                                     id='email'
-                                    placeholder='enter a password'
+                                    placeholder='enter a email'
                                     name="email"
                                     value={email}
                                     onChange={(e) => {

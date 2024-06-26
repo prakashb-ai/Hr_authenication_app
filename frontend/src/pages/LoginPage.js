@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Login from '../images/Login.png'
 import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import { useAuth } from '../context/AuthContext';
 
 
 function LoginPage() {
@@ -16,6 +16,8 @@ function LoginPage() {
     const [password, setPassword] = useState('')
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+
+    const {login} = useAuth();
 
 
 
@@ -60,7 +62,9 @@ function LoginPage() {
             }
 
             const data = await response.json();
-            console.log('Response data:', data);
+            login();
+
+
 
             if (data) {
                 console.log('Login successful', data);
@@ -70,6 +74,7 @@ function LoginPage() {
                 } else if (email.endsWith('@hr.com')) {
                     navigate('/hr');
                 }
+                
             } else {
                 throw new Error('Email or password is incorrect');
             }
@@ -78,6 +83,7 @@ function LoginPage() {
         } finally {
             setLoading(false);
         }
+
     };
 
 

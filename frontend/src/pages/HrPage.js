@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import FsfLogo from '../images/FsfLogo.jpg'
@@ -11,11 +11,36 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 function HrPage() {
   const navigate = useNavigate();
 
+  const [HrData, setHrData] = useState([])
+
+
+
+  const HrGetData = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/api/hr/get')
+      if (!response.ok) {
+        throw new Error('Failed to fetch the data')
+      }
+      const data = await response.json()
+      console.log('Received data:', data)
+      setHrData(data.data)
+    } catch (err) {
+      console.log(err.message)
+    }
+  }
+
+  useEffect(() => {
+    HrGetData();
+  }, [])
+
+
+
   const HandleLogin = () => {
     navigate('/')
   }
   return (
     <div className='container-fluid'>
+      {console.log('Rendering component with HrData:', HrData)}
       <div className='row m-1'>
         <div className='col-sm-6 col-md-6 col-lg-6 col-xl-6 '>
           <div className='mt-1 d-flex justify-content-start'>
@@ -46,16 +71,18 @@ function HrPage() {
           <div className='mt-2 mx-3  d-flex justify-content-end'>
             <FontAwesomeIcon icon={faPenToSquare} className='m-3 ' size="1.5x" />
           </div>
-          <div className=''>
-            <h5>Hr_name: Bsuryaprakash</h5>
-            <p>Hr_department: Fullstack </p>
-            <p>Hr_id: 2345</p>
-            <p>Hr_phonenumber: 123456789</p>
 
-          </div>
+          {HrData.map((item, index) => (
+            <div className='' key={index}>
+              <h5>Hr_name: {item.hr_name}</h5>
+              <p>Hr_department: {item.hr_department} </p>
+              <p>Hr_id: {item.hr_id}</p>
+              <p>Hr_phonenumber: {item.hr_phonenumber}</p>
+
+            </div>
+          ))}
         </div>
       </div>
-
       <div className='row d-flex justify-content-center '>
 
         <div className='col-sm-5 col-md-5 col-lg-5 col-xl-5 '>
