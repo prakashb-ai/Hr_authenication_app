@@ -17,7 +17,7 @@ function LoginPage() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const {login} = useAuth();
+    const { login } = useAuth();
 
 
 
@@ -67,14 +67,14 @@ function LoginPage() {
 
 
             if (data) {
-                console.log('Login successful', data);
+                console.log('Login successful');
 
                 if (email.endsWith('@emp.com')) {
                     navigate('/employe');
                 } else if (email.endsWith('@hr.com')) {
                     navigate('/hr');
                 }
-                
+
             } else {
                 throw new Error('Email or password is incorrect');
             }

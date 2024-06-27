@@ -12,11 +12,17 @@ function HrPage() {
   const navigate = useNavigate();
 
   const [HrData, setHrData] = useState([])
-  const [DeleteData, setDeleteData] = useState([])
-  const [hr_id ,setHrId] = useState('')
+  const [hr_id, setHrId] = useState('')
   const [hr_name, setHrName] = useState('')
   const [hr_department, setHrDepartment] = useState('')
-  const [hr_phonenumber,setHrPhoneNumber] = useState('')
+  const [hr_phonenumber, setHrPhoneNumber] = useState('')
+
+  const [EmpData, setEmpData] = useState([])
+
+
+  /* const {id} =useParams()*/
+
+
 
 
 
@@ -37,55 +43,111 @@ function HrPage() {
 
   useEffect(() => {
     HrGetData();
-    
+    GetEmpData();
+
   }, [])
 
 
 
-  const PostHrData = async()=>{
-    try{
-        const postResponse = await fetch('http://localhost:8000/api/hr/post',{
-          method:'POST',
-          headers:{
-            'Content-Type':'application/json'
-          },
-          body:JSON.stringify({
-            hr_id,
-            hr_name,
-            hr_department,
-            hr_phonenumber
-          })
-        });
-        if(!postResponse.ok){
-          throw new Error('form data not created')
-        }
+  const PostHrData = async () => {
+    try {
+      const postResponse = await fetch('http://localhost:8000/api/hr/post', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          hr_id,
+          hr_name,
+          hr_department,
+          hr_phonenumber
+        })
+      });
+      if (!postResponse.ok) {
+        throw new Error('form data not created')
+      }
 
-        const data = await postResponse.json()
-        console.log(data)
+      const data = await postResponse.json()
+      console.log(data)
+      HrGetData();
 
-    }catch(err){
+
+    } catch (err) {
       console.log(err.message)
     }
   }
 
+  /*
+  const UpdateHrData = async (id, hr_id, hr_name, hr_department, hr_phonenumber) => {
+    try {
+      const updateResponse = await fetch('http://localhost:8000/api/update/hr/'+id, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          hr_id,
+          hr_name,
+          hr_department,
+          hr_phonenumber
+        })
+      });
 
-  const DeleteHrData = async()=>{
-    try{
+      if (!updateResponse.ok) {
+        throw new Error('Failed to update HR data');
+      }
 
-      const deleteResponse = await fetch('http://localhost://8000/api/delete/hr',{
-        method:'DELETE'
+      const data = await updateResponse.json();
+      console.log(data);
+      HrGetData();
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+*/
+
+  const DeleteHrData = async () => {
+    try {
+
+      const deleteResponse = await fetch('http://localhost:8000/api/delete/hr', {
+        method: 'DELETE'
       })
-      if(!deleteResponse.ok){
+      if (!deleteResponse.ok) {
         throw new Error('delete Data')
       }
       const data = await deleteResponse.json()
       console.log(data)
+      HrGetData();
 
 
-    }catch(err){
+
+    } catch (err) {
       console.log(err.message)
     }
   }
+
+
+
+
+
+  const GetEmpData = async () => {
+    try {
+      const getEmpResponse = await fetch('http://localhost:8000/api/emp/get')
+
+      if (!getEmpResponse.ok) {
+        throw new Error('emp not fetching')
+      }
+
+      const data = await getEmpResponse.json()
+      console.log('emp data', data)
+      setEmpData(data.data)
+
+
+    } catch (err) {
+      console.log(err.message)
+    }
+  }
+
 
 
 
@@ -160,155 +222,31 @@ function HrPage() {
 
 
       <div className='row'>
-        <div className='col-sm-3 col-md-3 col-lg-3 col-xl-3'>
-          <div className='m-5'>
-            <div className='card shadow' width="50%" height="10%" >
-              <img src={Login} alt='first card' className='card-img-top' width="30%" height="30%" />
+        {EmpData.map((item, index) => (
 
-              <div className='card-body'>
-                <h4 className='card-title'>prakash</h4>
-                <p>123</p>
-                <p>fullstack</p>
-                <p>630145874</p>
-                <button type='button' className='btn btn-primary'>Task</button>
+          <div className='col-sm-3 col-md-3 col-lg-3 col-xl-3' key={index}>
 
+            <div className='m-5' >
+              <div className='card shadow' width="50%" height="10%" >
+                <img src={Login} alt='first card' className='card-img-top' width="30%" height="30%" />
+                <div className='card-body' >
+                  <h4 className='card-title'>{item.emp_name}</h4>
+                  <p>123</p>
+                  <p>fullstack</p>
+                  <p>630145874</p>
+                  <button type='button' className='btn btn-primary'>Task</button>
+
+                </div>
               </div>
+
+
             </div>
 
           </div>
-        </div>
-
-        <div className='col-sm-3 col-md-3 col-lg-3 col-xl-3'>
-          <div className='m-5'>
-
-            <div className='card shadow' width="50%" height="10%" >
-              <img src={Login} alt='first card' className='card-img-top' width="30%" height="30%" />
-
-              <div className='card-body'>
-                <h4 className='card-title'>prakash</h4>
-                <p>123</p>
-                <p>fullstack</p>
-                <p>630145874</p>
-                <button type='button' className='btn btn-primary'>Task</button>
-
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className='col-sm-3 col-md-3 col-lg-3 col-xl-3'>
-          <div className='m-5'>
-
-            <div className='card shadow ' width="50%" height="10%" >
-              <img src={Login} alt='first card' className='card-img-top' width="30%" height="30%" />
-
-              <div className='card-body'>
-                <h4 className='card-title'>prakash</h4>
-                <p>123</p>
-                <p>fullstack</p>
-                <p>630145874</p>
-                <button type='button' className='btn btn-primary'>Task</button>
-
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className='col-sm-3 col-md-3 col-lg-3 col-xl-3'>
-          <div className='m-5'>
-
-            <div className='card shadow' width="50%" height="10%" >
-              <img src={Login} alt='first card' className='card-img-top' width="30%" height="30%" />
-
-              <div className='card-body'>
-                <h4 className='card-title'>prakash</h4>
-                <p>123</p>
-                <p>fullstack</p>
-                <p>630145874</p>
-                <button type='button' className='btn btn-primary'>Task</button>
-
-              </div>
-            </div>
-          </div>
-        </div>
-
+        ))}
       </div>
 
-
-
-      <div className='row'>
-        <div className='col-sm-3 col-md-3 col-lg-3 col-xl-3'>
-          <div className='m-5'>
-            <div className='card shadow' width="50%" height="10%" >
-              <img src={Login} alt='first card' className='card-img-top' width="30%" height="30%" />
-
-              <div className='card-body'>
-                <h4 className='card-title'>prakash</h4>
-                <p>123</p>
-                <p>fullstack</p>
-                <p>630145874</p>
-                <button type='button' className='btn btn-primary'>Task</button>
-
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <div className='col-sm-3 col-md-3 col-lg-3 col-xl-3'>
-          <div className='m-5'>
-
-            <div className='card shadow' width="50%" height="10%" >
-              <img src={Login} alt='first card' className='card-img-top' width="30%" height="30%" />
-
-              <div className='card-body'>
-                <h4 className='card-title'>prakash</h4>
-                <p>123</p>
-                <p>fullstack</p>
-                <p>630145874</p>
-                <button type='button' className='btn btn-primary'>Task</button>
-
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className='col-sm-3 col-md-3 col-lg-3 col-xl-3'>
-          <div className='m-5'>
-
-            <div className='card shadow' width="50%" height="10%" >
-              <img src={Login} alt='first card' className='card-img-top' width="30%" height="30%" />
-
-              <div className='card-body'>
-                <h4 className='card-title'>prakash</h4>
-                <p>123</p>
-                <p>fullstack</p>
-                <p>630145874</p>
-                <button type='button' className='btn btn-primary'>Task</button>
-
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className='col-sm-3 col-md-3 col-lg-3 col-xl-3'>
-          <div className='m-5'>
-
-            <div className='card shadow' width="50%" height="10%" >
-              <img src={Login} alt='first card' className='card-img-top' width="30%" height="30%" />
-
-              <div className='card-body'>
-                <h4 className='card-title'>prakash</h4>
-                <p>123</p>
-                <p>fullstack</p>
-                <p>630145874</p>
-                <button type='button' className='btn btn-primary'>Task</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-
+          
       <div className='row'>
         <div className='col-sm-12 col-md-12 col-lg-12 col-xl-12' >
           <div className='mt-3'>
@@ -331,13 +269,13 @@ function HrPage() {
                             className='form-control border border-1 shadow '
                             id='number'
                             placeholder='enter a ID Number'
-                            name="number" 
+                            name="number"
                             value={hr_id}
-                            onChange={(e)=>{
+                            onChange={(e) => {
                               setHrId(e.target.value)
                             }}
 
-                            />
+                          />
                         </div>
                       </div>
 
@@ -348,11 +286,11 @@ function HrPage() {
                           placeholder='enter a name'
                           name="name"
                           value={hr_name}
-                          onChange={(e)=>{
+                          onChange={(e) => {
                             setHrName(e.target.value)
                           }}
-                          
-                          />
+
+                        />
                       </div>
 
                     </div>
@@ -364,12 +302,12 @@ function HrPage() {
                             className='form-control border border-1 shadow '
                             id='department'
                             placeholder='enter a department'
-                            name="department" 
+                            name="department"
                             value={hr_department}
-                            onChange={(e)=>{
+                            onChange={(e) => {
                               setHrDepartment(e.target.value)
                             }}
-                            />
+                          />
                         </div>
                       </div>
 
@@ -380,10 +318,10 @@ function HrPage() {
                           placeholder='enter a phonenumber'
                           name="phonenumber"
                           value={hr_phonenumber}
-                          onChange={(e)=>{
+                          onChange={(e) => {
                             setHrPhoneNumber(e.target.value)
                           }}
-                          />
+                        />
                       </div>
 
                     </div>
@@ -394,11 +332,8 @@ function HrPage() {
 
                   <div className="modal-footer">
                     <button type="button" className="btn btn-success" onClick={PostHrData} data-bs-dismiss="modal">Save</button>
-                    <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Delete</button>
-
-
+                    <button type="button" className="btn btn-danger" onClick={DeleteHrData} data-bs-dismiss="modal">Delete</button>
                   </div>
-
 
                 </div>
               </div>

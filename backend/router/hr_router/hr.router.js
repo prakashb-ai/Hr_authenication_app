@@ -69,6 +69,8 @@ router.put('/api/update/hr/:id', async (req, res) => {
     }
 })
 
+
+
 router.delete('/api/delete/hr/:id', async (req, res) => {
     try {
         const deleteData = await HrSchema.findById(req.params.id)
