@@ -108,8 +108,8 @@ function EmployeePage() {
             <div className='pt-3 mx-3  shadow'>
               <table className='table  table-hover'>
 
-                <thead>
-                  <tr >
+                <thead >
+                  <tr>
                     <th>Task ID</th>
                     <th>Task Title </th>
                     <th>Task Description</th>
@@ -119,7 +119,7 @@ function EmployeePage() {
 
                   <tbody key={index}>
 
-                    <tr >
+                    <tr>
                       <td>{item.task_id}</td>
                       <td>{item.task_title}</td>
                       <td>{item.task_description}</td>
