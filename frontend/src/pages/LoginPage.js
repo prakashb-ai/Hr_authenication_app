@@ -70,7 +70,7 @@ function LoginPage() {
                 console.log('Login successful');
 
                 if (email.endsWith('@emp.com')) {
-                    navigate('/employe');
+                    navigate('/employee');
                 } else if (email.endsWith('@hr.com')) {
                     navigate('/hr');
                 }
