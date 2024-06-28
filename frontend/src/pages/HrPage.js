@@ -231,9 +231,9 @@ function HrPage() {
                 <img src={Login} alt='first card' className='card-img-top' width="30%" height="30%" />
                 <div className='card-body' >
                   <h4 className='card-title'>{item.emp_name}</h4>
-                  <p>123</p>
-                  <p>fullstack</p>
-                  <p>630145874</p>
+                  <p>{item.emp_id}</p>
+                  <p>{item.emp_department}</p>
+                  <p>{item.emp_phonenumber}</p>
                   <button type='button' className='btn btn-primary'>Task</button>
 
                 </div>
@@ -246,7 +246,7 @@ function HrPage() {
         ))}
       </div>
 
-          
+
       <div className='row'>
         <div className='col-sm-12 col-md-12 col-lg-12 col-xl-12' >
           <div className='mt-3'>
