@@ -19,7 +19,7 @@ const EmpSchema = new mongoose.Schema({
     },
     emp_hr_id:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'HrSchema'
+        ref: 'UserSchema'
     }
 
 },{

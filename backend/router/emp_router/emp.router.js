@@ -1,41 +1,36 @@
 const express = require('express')
 const router = express.Router()
 const EmpSchema = require('../../models/emp_models/emp.models')
+const middleware = require('../../middleware')
 
-router.post('/api/emp/post', async (req, res) => {
-    const EmpData = new EmpSchema({
-        emp_name: req.body.emp_name,
-        emp_id: req.body.emp_id,
-        emp_phonenumber: req.body.emp_phonenumber,
-        emp_department: req.body.emp_department,
-        emp_hr_id: req.body.emp_hr_id
-    })
-    const saveData = await EmpData.save()
-    if (saveData) {
-        return res.status(201).json({ message: "data created", data: saveData })
-    }
-    else {
-        return res.status(400).json({ message: "data not created" })
-    }
-})
-
-router.get('/api/emp/get', async (req, res) => {
+router.post('/api/emp/post', middleware, async (req, res) => {
     try {
-        const getData = await EmpSchema.find().populate('emp_hr_id')
-        if (getData) {
-            return res.status(200).json({ message: "data found", data: getData })
-        }
-        else {
-            return res.status(404).json({ message: "data not found" })
-        }
+        const { emp_name, emp_id, emp_phonenumber, emp_department } = req.body;
+        const newEmp = new EmpSchema({
+            emp_name,
+            emp_id,
+            emp_phonenumber,
+            emp_department,
+            emp_hr_id: req.user.id
+        });
+
+        const saveData = await newEmp.save();
+        return res.status(201).json({ message: "Employee created", data: saveData });
     } catch (err) {
-        console.log(err)
-        return res.status(500).json({ message: "Internal server Error" })
+        console.error(err);
+        return res.status(500).json({ message: "Internal Server Error" });
     }
+});
 
-
-})
-
+router.get('/api/emp/get', middleware, async (req, res) => {
+    try {
+        const empData = await EmpSchema.find({ emp_hr_id: req.user.id });
+        return res.status(200).json({ message: "Employee data found", data: empData });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+});
 router.get('/api/emp/get/:id', async (req, res) => {
     try {
         const getData = await EmpSchema.findById(req.params.id).populate('emp_hr_id')

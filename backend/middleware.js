@@ -1,20 +1,27 @@
 const jwt = require('jsonwebtoken');
+const Usermodel = require('./models/user.model');
 
-module.exports = function(req,res,next){
+const middleware = async (req, res, next) => {
+    const token = req.headers['authorization'];
+
+    if (!token) {
+        return res.status(401).json({ message: 'Authorization header missing' });
+    }
+
     try {
-        const token = req.header('Authorization').replace('Bearer ', '');
-        ;
-        if (token) {
-            return res.status(200).json({ message: "Token  found",data:token });
+        const decoded = jwt.verify(token.split(' ')[1], 'JWT_SECRET'); 
+        const user = await Usermodel.findById(decoded.userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
         }
-        
 
-        const decoded = jwt.verify(token, 'JWT_SECRET');
-        req.user = decoded.user;
-
+        req.user = user; 
         next();
     } catch (err) {
-        console.error(err);
-        return res.status(401).json({ message: "Invalid token" });
+        console.error('Error verifying token:', err);
+        return res.status(401).json({ message: 'Invalid or expired token' });
     }
-}
+};
+
+module.exports = middleware;
