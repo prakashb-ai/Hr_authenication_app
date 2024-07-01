@@ -57,8 +57,8 @@ function Register() {
             }
 
             const data = await response.json();
-            if (data.token) {
-                localStorage.setItem('token', data.token);
+            if (data) {
+                localStorage.setItem('token', data);
                 console.log('Registration successful', data);
             }
 

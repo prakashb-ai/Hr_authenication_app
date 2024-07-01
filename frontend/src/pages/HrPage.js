@@ -16,6 +16,9 @@ function HrPage() {
   const [hr_name, setHrName] = useState('')
   const [hr_department, setHrDepartment] = useState('')
   const [hr_phonenumber, setHrPhoneNumber] = useState('')
+  const [task_id,setTaskId] = useState('')
+  const [task_title,setTaskTitle] = useState('')
+  const [task_description,setTaskDescription] = useState('') 
 
   const [EmpData, setEmpData] = useState([])
 
@@ -23,7 +26,15 @@ function HrPage() {
 
   const HrGetData = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/hr/get')
+      const token = localStorage.getItem('token')
+      const response = await fetch('http://localhost:8000/api/hr/get',{
+        method:'GET',
+        headers:{
+          'Content-Type':'application/json',
+        'Authorization':`Bearer ${token}`
+        }
+
+      })
       if (!response.ok) {
         throw new Error('Failed to fetch the data')
       }
@@ -45,10 +56,12 @@ function HrPage() {
 
   const PostHrData = async () => {
     try {
+      const token = localStorage.getItem('token')
       const postResponse = await fetch('http://localhost:8000/api/hr/post', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           hr_id,
@@ -121,54 +134,69 @@ function HrPage() {
   }
 
 
-
-
-/*
   const GetEmpData = async () => {
     try {
-      const token = localStorage.getItem('token')
-      const getEmpResponse = await fetch('http://localhost:8000/api/emp/get',{
-        method:'GET',
-        headers:{
-          'Content-Type':'application/json',
-          'Authorization':`Bearer ${token}`
-        }
-      })
-
-      if (!getEmpResponse.ok) {
-        throw new Error('emp not fetching')
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
       }
 
-      const data = await getEmpResponse.json()
-      console.log('emp data', data)
-      setEmpData(data.data)
+      const getEmpResponse = await fetch('http://localhost:8000/api/emp/get', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
 
+      if (!getEmpResponse.ok) {
+        throw new Error(`Error fetching data: `);
+      }
+
+      const data = await getEmpResponse.json();
+      console.log('Fetched data:', data);
+
+      setEmpData(data.data || []); 
 
     } catch (err) {
-      console.log(err.message)
+      console.error('Error:', err.message);
     }
-  }
-*/
+  };
+
+
+  useEffect(()=>{
+    GetEmpData();
+  },[])
 
 
 
-const GetEmpData = async () => {
-  try {
-    const getEmpResponse = await fetch('http://localhost:8000/api/emp/gets')
-
-    if (!getEmpResponse.ok) {
-      throw new Error('emp not fetching')
+const PostTask = async()=>{
+  try{
+    const token = localStorage.getItem('token')
+    const PostTaskResponse = await fetch('http://localhost:8000/api/post/task',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':`Bearer ${token}`
+      },
+      body:JSON.stringify({
+        task_id,
+        task_title,
+        task_description
+      })
+    });
+    if(!PostTaskResponse.ok){
+      throw new Error('task not created')
     }
-
-    const data = await getEmpResponse.json()
-    console.log('emp data', data)
-    setEmpData(data.data)
-
-
-  } catch (err) {
+    const postTaskResponse = await PostTaskResponse.json()
+    console.log(postTaskResponse)
+  }catch(err){
     console.log(err.message)
   }
 }
+
+
+
 
   const HandleLogin = () => {
     navigate('/')
@@ -235,10 +263,6 @@ const GetEmpData = async () => {
 
       </div>
 
-
-
-
-
       <div className='row'>
         {EmpData.map((item, index) => (
 
@@ -252,7 +276,9 @@ const GetEmpData = async () => {
                   <p>{item.emp_id}</p>
                   <p>{item.emp_department}</p>
                   <p>{item.emp_phonenumber}</p>
-                  <button type='button' className='btn btn-primary'>Task</button>
+                  <button type='button' className='btn btn-primary'
+                  data-bs-toggle="modal" data-bs-target="#myTaskModal"
+                  >Task</button>
 
                 </div>
               </div>
@@ -360,6 +386,92 @@ const GetEmpData = async () => {
           </div>
         </div>
       </div>
+
+
+      <div className='row'>
+        <div className='col-sm-12 col-md-12 col-lg-12 col-xl-12' >
+          <div className='mt-3'>
+            <div className='modal fade mt-5 py-5 ' id='myTaskModal' tabIndex="-1" aria-labelledby="modalLabel" aria-hidden="true"  >
+              <div className='modal-dialog' >
+                <div className='modal-content'>
+                  <div className='modal-header'>
+                    <h4 className='modal-title' id="modalLabel">Form</h4>
+                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+
+
+
+                  <form className='mt-1 mx-3'>
+                    <div className="row mt-3">
+
+                      <div className='col-sm-6 col-md-6 col-lg-6 col-xl-6'>
+                        <div className='nt-3 mb-3'>
+                          <input type='number'
+                            className='form-control border border-1 shadow '
+                            id='number'
+                            placeholder='enter a task id Number'
+                            name="number"
+                            value={task_id}
+                            onChange={(e) => {
+                              setTaskId(e.target.value)
+                            }}
+
+                          />
+                        </div>
+                      </div>
+
+                      <div className='col-sm-6 col-md-6 col-lg-6 col-xl-6'>
+                        <input type='text'
+                          className='form-control border border-1 shadow '
+                          id='name'
+                          placeholder='enter a task title'
+                          name="title"
+                          value={task_title}
+                          onChange={(e) => {
+                            setTaskTitle(e.target.value)
+                          }}
+
+                        />
+                      </div>
+
+                    </div>
+                    <div className="row mt-3">
+
+                      <div className='col-sm-12 col-md-12 col-lg-12 col-xl-12'>
+                        <div className='nt-3 mb-3'>
+                          <input type='text'
+                            className='form-control border border-1 shadow '
+                            id='description'
+                            placeholder='enter a description'
+                            name="department"
+                            value={task_description}
+                            onChange={(e) => {
+                              setTaskDescription(e.target.value)
+                            }}
+                          />
+                        </div>
+                      </div>
+
+                     
+
+                    </div>
+
+                  </form>
+
+
+
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-success" onClick={PostTask} data-bs-dismiss="modal">Save</button>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
 
 
 

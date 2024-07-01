@@ -6,6 +6,7 @@ const middleware = require('../middleware')
 const bcrypt = require('bcrypt')
 const TaskSchema = require('../models/todo_model/task.model')
 const EmpSchema = require('../models/emp_models/emp.models')
+const HrSchema = require('../models/hr_models/hr.model')
 
 
 router.post('/api/register', async (req, res) => {
@@ -42,6 +43,15 @@ router.post('/api/register', async (req, res) => {
             emp_department: ''
         });
 
+        const newHr = new HrSchema({
+            hr_user :newUser._id,
+            hr_name: '',
+            hr_department: ' ',
+            hr_phonenumber:' ',
+            hr_id:' ',
+
+        })
+
 
         return res.status(200).json({
             message: 'User created successfully',
@@ -54,7 +64,9 @@ router.post('/api/register', async (req, res) => {
 
                 },
                 tasks: [],
-                empData:newEmp
+                empData:newEmp,
+                hrData : newHr
+
             }
         });
     } catch (error) {
@@ -62,7 +74,6 @@ router.post('/api/register', async (req, res) => {
         return res.status(500).json({ message: 'Failed to create user', error });
     }
 });
-
 router.post('/api/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -74,26 +85,30 @@ router.post('/api/login', async (req, res) => {
 
         const match = await bcrypt.compare(password, user.password);
 
-        if (match) {
-            const payload = { userId: user._id, email: user.email };
-            const token = jwt.sign(payload, 'JWT_SECRET', { expiresIn: '1h' });
-
-            const empData = await EmpSchema.findOne({ emp_hr_id: user._id });
-
-            const tasks = empData ? await TaskSchema.find({ task_user_id: empData._id }) : [];
-
-
-            return res.json({
-                userId: user._id,
-                email: user.email,
-                empData,
-                hasTasks: tasks.length > 0,
-                tasks,
-                token
-            });
-        } else {
+        if (!match) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
+
+        const payload = { userId: user._id, email: user.email };
+        const token = jwt.sign(payload, 'JWT_SECRET', { expiresIn: '1h' });
+
+        const empData = await EmpSchema.findOne({ emp_hr_id: user._id });
+        const HrData = await HrSchema.findOne({hr_user:user._id})
+
+        if (!empData) {
+            console.warn(`No employee data found for user ID: ${user._id}`);
+        }
+
+        const tasks = empData ? await TaskSchema.find({ task_user_id: empData._id }) : [];
+        
+        return res.json({
+            userId: user._id,
+            email: user.email,
+            empData,
+            hasTasks: tasks.length > 0,
+            tasks,
+            token
+        });
     } catch (err) {
         console.error('Error during login:', err);
         return res.status(500).json({ message: "Server Error" });

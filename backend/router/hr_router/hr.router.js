@@ -1,15 +1,16 @@
 const express = require('express')
 const router = express.Router()
 const HrSchema = require('../../models/hr_models/hr.model')
+const middleware = require('../../middleware')
 
-router.post('/api/hr/post', async (req, res) => {
+router.post('/api/hr/post',middleware, async (req, res) => {
 
     const Hrdata = new HrSchema({
         hr_id: req.body.hr_id,
         hr_name: req.body.hr_name,
         hr_department: req.body.hr_department,
         hr_phonenumber: req.body.hr_phonenumber,
-        hr_user: req.body.hr_user
+        hr_user: req.user.id
 
     })
     const saveData = await Hrdata.save()
@@ -21,7 +22,7 @@ router.post('/api/hr/post', async (req, res) => {
     }
 })
 
-router.get('/api/hr/get', async (req, res) => {
+router.get('/api/hr/get',middleware, async (req, res) => {
     try {
         const getData = await HrSchema.find().populate('hr_user')
         if (getData) {
@@ -36,7 +37,7 @@ router.get('/api/hr/get', async (req, res) => {
     }
 })
 
-router.get('/api/hr/get/:id', async (req, res) => {
+router.get('/api/hr/get/:id', middleware,async (req, res) => {
     try {
         const getData = await HrSchema.findById(req.params.id).populate('hr_user')
         if (getData) {

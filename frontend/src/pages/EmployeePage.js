@@ -110,6 +110,7 @@ const EmployeePage = () => {
   useEffect(() => {
     GetEmpData();
   }, []);
+  
   const handleLogout = () => {
     navigate('/');
   };
