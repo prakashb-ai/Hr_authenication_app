@@ -15,7 +15,7 @@ function Register() {
     const [confirmpassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-   
+
 
     const handleRegister = async () => {
         if (!username.trim() || !email.trim() || !phonenumber.trim() || !password.trim() || !confirmpassword.trim()) {
@@ -32,7 +32,7 @@ function Register() {
             const regex = /^[^\s@]+@(hr\.com|emp\.com)$/;
             return regex.test(email);
         };
-        
+
         if (!validateEmail(email)) {
             setError('Email must end with @hr.com or @emp.com');
             return;
@@ -42,12 +42,12 @@ function Register() {
         setError('');
 
         try {
-            const token = localStorage.getItem('token')
+            const token = localStorage.getItem('token');
             const response = await fetch('http://localhost:8000/api/register', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': "application/json",
-                    'Authorization':`Bearer ${token}`
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({ username, email, phonenumber, password, confirmpassword }),
             });
@@ -57,8 +57,10 @@ function Register() {
             }
 
             const data = await response.json();
-            console.log('Registration successful', data);
-            
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+                console.log('Registration successful', data);
+            }
 
             if (email.endsWith('@emp.com')) {
                 navigate('/employee');

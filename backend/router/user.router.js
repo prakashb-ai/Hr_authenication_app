@@ -7,21 +7,23 @@ const bcrypt = require('bcrypt')
 const TaskSchema = require('../models/todo_model/task.model')
 const EmpSchema = require('../models/emp_models/emp.models')
 
+
 router.post('/api/register', async (req, res) => {
     try {
         const { username, email, phonenumber, password, confirmpassword } = req.body;
-        const existingUser = await Usermodel.findOne({ email });
 
+        const existingUser = await Usermodel.findOne({ email });
         if (existingUser) {
+            console.log('User already exists:', existingUser);
             return res.status(400).json({ message: 'User already exists', data: existingUser });
         }
 
         if (password !== confirmpassword) {
+            console.log('Passwords do not match');
             return res.status(400).json({ message: 'Passwords do not match' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-
         const newUser = new Usermodel({
             username,
             email,
@@ -31,8 +33,30 @@ router.post('/api/register', async (req, res) => {
         });
 
         await newUser.save();
+        
+        const newEmp = new EmpSchema({
+            emp_hr_id: newUser._id,
+            emp_name: '',
+            emp_id: '',
+            emp_phonenumber: '',
+            emp_department: ''
+        });
 
-        return res.status(200).json({ message: 'User created successfully', data: { ...newUser.toObject(), tasks: [] } });
+
+        return res.status(200).json({
+            message: 'User created successfully',
+            data: {
+                user: {
+                    _id: newUser._id,
+                    username: newUser.username,
+                    email: newUser.email,
+                    phonenumber: newUser.phonenumber,
+
+                },
+                tasks: [],
+                empData:newEmp
+            }
+        });
     } catch (error) {
         console.error('Error creating user:', error);
         return res.status(500).json({ message: 'Failed to create user', error });
@@ -58,6 +82,7 @@ router.post('/api/login', async (req, res) => {
 
             const tasks = empData ? await TaskSchema.find({ task_user_id: empData._id }) : [];
 
+
             return res.json({
                 userId: user._id,
                 email: user.email,
@@ -75,7 +100,7 @@ router.post('/api/login', async (req, res) => {
     }
 });
 
-router.get('/api/profile', middleware,async (req, res) => {
+router.get('/api/profile', middleware, async (req, res) => {
     const getData = await Usermodel.find()
     if (getData) {
         return res.status(200).json({ message: "data found", data: getData })
@@ -86,7 +111,7 @@ router.get('/api/profile', middleware,async (req, res) => {
 })
 
 
-router.delete('/delete', middleware,async (req, res) => {
+router.delete('/delete', middleware, async (req, res) => {
     try {
         const deleteData = await Usermodel.deleteMany()
         if (deleteData) {

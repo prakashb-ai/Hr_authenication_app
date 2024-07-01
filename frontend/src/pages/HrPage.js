@@ -20,12 +20,6 @@ function HrPage() {
   const [EmpData, setEmpData] = useState([])
 
 
-  /* const {id} =useParams()*/
-
-
-
-
-
 
   const HrGetData = async () => {
     try {
@@ -129,10 +123,17 @@ function HrPage() {
 
 
 
-
+/*
   const GetEmpData = async () => {
     try {
-      const getEmpResponse = await fetch('http://localhost:8000/api/emp/get')
+      const token = localStorage.getItem('token')
+      const getEmpResponse = await fetch('http://localhost:8000/api/emp/get',{
+        method:'GET',
+        headers:{
+          'Content-Type':'application/json',
+          'Authorization':`Bearer ${token}`
+        }
+      })
 
       if (!getEmpResponse.ok) {
         throw new Error('emp not fetching')
@@ -147,10 +148,27 @@ function HrPage() {
       console.log(err.message)
     }
   }
+*/
 
 
 
+const GetEmpData = async () => {
+  try {
+    const getEmpResponse = await fetch('http://localhost:8000/api/emp/gets')
 
+    if (!getEmpResponse.ok) {
+      throw new Error('emp not fetching')
+    }
+
+    const data = await getEmpResponse.json()
+    console.log('emp data', data)
+    setEmpData(data.data)
+
+
+  } catch (err) {
+    console.log(err.message)
+  }
+}
 
   const HandleLogin = () => {
     navigate('/')

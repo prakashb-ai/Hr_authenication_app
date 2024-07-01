@@ -13,7 +13,6 @@ function LoginPage() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login status
 
     const { login } = useAuth();
 
@@ -58,7 +57,6 @@ function LoginPage() {
 
             if (data.token) {
                 login(data.token);
-                setIsLoggedIn(true);
             } else {
                 throw new Error('Login failed. Please check your credentials.');
             }
@@ -68,7 +66,8 @@ function LoginPage() {
 
             if (email.endsWith('@emp.com')) {
                 navigate('/employee');
-            } else if (email.endsWith('@hr.com')) {
+            } 
+            else if (email.endsWith('@hr.com')) {
                 navigate('/hr');
             }
         } catch (error) {
@@ -78,11 +77,7 @@ function LoginPage() {
 
         }
 
-        if (isLoggedIn) {
-            return navigate('/employee');
-        } else {
-            return navigate('/');
-        }
+        
     };
 
     const goToRegister = () => {

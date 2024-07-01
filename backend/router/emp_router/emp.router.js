@@ -3,6 +3,7 @@ const router = express.Router()
 const EmpSchema = require('../../models/emp_models/emp.models')
 const middleware = require('../../middleware')
 
+
 router.post('/api/emp/post', middleware, async (req, res) => {
     try {
         const { emp_name, emp_id, emp_phonenumber, emp_department } = req.body;
@@ -22,15 +23,30 @@ router.post('/api/emp/post', middleware, async (req, res) => {
     }
 });
 
-router.get('/api/emp/get', middleware, async (req, res) => {
+router.get('/api/emp/get', middleware,async (req, res) => {
     try {
-        const empData = await EmpSchema.find({ emp_hr_id: req.user.id });
+        const userId = req.user.id;
+
+        const empData = await EmpSchema.find({ emp_hr_id: userId });
         return res.status(200).json({ message: "Employee data found", data: empData });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: "Internal Server Error" });
     }
 });
+
+router.get('/api/emp/gets', async (req, res) => {
+    try {
+        const empData = await EmpSchema.find();
+        return res.status(200).json({ message: "Employee data found", data: empData });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+
+
 router.get('/api/emp/get/:id', async (req, res) => {
     try {
         const getData = await EmpSchema.findById(req.params.id).populate('emp_hr_id')
